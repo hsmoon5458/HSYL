@@ -1,2 +1,2 @@
 # HSYL
-HyeSung and Yelim's BCI Project
+HyeSung and Ye-Lim's BCI Project
