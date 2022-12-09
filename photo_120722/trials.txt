@@ -1,0 +1,27 @@
+from PIL import Image
+
+image = Image.open('mosaic.jpg', 'r')
+image.show()
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+image = cv2.imread('mosaic.jpg', cv2.IMREAD_COLOR)
+cv2.imshow("IMAGE", image)
+cv2.waitKey(0)
+
+
+red = image[:,:,2]
+
+red_image = np.zeros(image.shape)
+red_image[:,:,2] = red
+
+cv2.imwrite('D:/red.png', red_image)
+cv2.imshow("IMAGE", red_image)
+cv2.waitKey(0)
+
+
+
+cv2.imshow("IMAGE", red_image)
+cv2.waitKey(0)
