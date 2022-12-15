@@ -14,6 +14,7 @@ test_data = pd.read_csv("test_group.csv", sep = ";")
 print(control_data.head())
 print(test_data.head())
 
+
 ## Data Preparation ##
 
 control_data.columns = ["Campaign Name", "Date", "Amount Spent", "Number of Impressions", "Reach", "Website Clicks", "Searches Received", "Content Viewed", "Added to Cart", "Purchases"]
@@ -39,9 +40,29 @@ control_data["Purchases"].fillna(value = control_data["Purchases"].mean(), inpla
 # how = "outer" means to use unition of keys from both frames; returns a join over the union of the input columns
 # how = "inner" means to use intersection of keys from both frames; contains the intersection of the two sets of inputs
 ab_data = control_data.merge(test_data, how = "outer").sort_values(["Date"])
-# drop = False means to add the replaced index column to the data
+# drop = False means to add the replaced index column to the data; the current index will be deleted entirely and the numeric index will replace it
+# drop = True means to delete the index
 ab_data = ab_data.reset_index(drop = True)
 print(ab_data.head())
 
 # Check whether both data have the same sample size
 print(ab_data["Campaign Name"].value_counts())
+
+
+## A/B Testing to Find the Best Marketing Strategy ##
+
+# The relationship between the number of impressions and the amount spent on both campaigns
+# Create a scatter plot (figure)
+figure = px.scatter(data_frame = ab_data, x = "Number of Impressions", y = "Amount Spent", size = "Amount Spent", color = "Campaign Name", trendline = "ols")
+figure.show()
+
+# The number of searches performed on the website from both campaigns
+# Set up variables
+label = ["Total Searches from Control Campaign", "Total Searches from Test Campaign"]
+counts = [sum(control_data["Searches Received"]), sum(test_data["Searches Received"])]
+colors = ['gold', 'lightgreen']
+# Create a pie chart (figure)
+fig = go.Figure(data = [go.Pie(labels = label, values = counts)])
+fig.update_layout(title_text = "Control vs. Test: Searches")
+fig.update_traces(hoverinfo = "label+percent", textinfo = "value", textfont_size = 30, marker = dict(colors = colors, line = dict(color = 'black', width = 3)))
+fig.show()
